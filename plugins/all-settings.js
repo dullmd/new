@@ -231,6 +231,6 @@ async(conn, mek, m, { args, isOwner, reply, botNumber, config }) => {
         
         await updateConfig('PREFIX', newPrefix, botNumber, config, reply);
     } else {
-        reply(`*CURRENT PREFIX: ❮ ${config.PREFIX} ❯*\nChange the command prefix with: *SETPREFIX <newPrefix>*`));
+        reply(`*CURRENT PREFIX: ❮ ${config.PREFIX} ❯*\nChange the command prefix with: *SETPREFIX <newPrefix>*`);
     }
 });
