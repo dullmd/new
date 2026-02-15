@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👑 SILA MD - Login 👑</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f3ff;
+            --secondary: #bc13fe;
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --success: #00ff88;
+            --danger: #ff3366;
+            --warning: #ffaa00;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Rajdhani', sans-serif;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* Background Grid Animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                linear-gradient(rgba(0, 243, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 20s linear infinite;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 400px; }
+        }
+
+        .container {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            padding: 3rem;
+            border-radius: 0px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
+            position: relative;
+            clip-path: polygon(
+                10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%
+            );
+        }
+
+        .container-large {
+            max-width: 800px;
+            width: 95%;
+        }
+
+        /* Corner Decorations */
+        .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            transition: 0.3s;
+        }
+        .tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+        .bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+        .br { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .status-line {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        input, select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        select option {
+            background: var(--bg);
+            color: var(--primary);
+        }
+
+        input:focus, select:focus {
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        input::placeholder {
+            color: rgba(0, 243, 255, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            margin-bottom: 15px;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            transition: 0.3s;
+            z-index: -1;
+        }
+
+        button:hover {
+            color: #000;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        button:hover::before {
+            left: 0;
+        }
+
+        button.success {
+            border-color: var(--success);
+            color: var(--success);
+        }
+        button.success::before {
+            background: var(--success);
+        }
+
+        button.danger {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        button.danger::before {
+            background: var(--danger);
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        #result {
+            margin-top: 20px;
+            min-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .code-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--secondary);
+            text-shadow: 0 0 15px var(--secondary);
+            letter-spacing: 5px;
+            border: 1px dashed var(--secondary);
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .code-display:active {
+            transform: scale(0.98);
+        }
+
+        .code-display::after {
+            content: 'CLICK TO COPY';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            opacity: 0.7;
+        }
+
+        .loader {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            text-shadow: 0 0 5px var(--danger);
+        }
+
+        .success-message {
+            color: var(--success);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            text-shadow: 0 0 5px var(--success);
+        }
+
+        /* Dashboard Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        .user-info {
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        .menu-container {
+            position: relative;
+        }
+
+        .menu-dots {
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary);
+            padding: 10px;
+            border: 1px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+        }
+
+        .menu-dropdown {
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--primary);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .menu-dropdown.show {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            transition: 0.3s;
+            text-align: left;
+            color: #fff;
+        }
+
+        .menu-item:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .menu-item.danger:hover {
+            background: var(--danger);
+        }
+
+        .bots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .bot-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .bot-card.connected {
+            border-color: var(--success);
+        }
+
+        .bot-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .bot-status {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .status-connected {
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-disconnected {
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .bot-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .bot-actions button {
+            padding: 8px;
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        .feature-control {
+            margin: 15px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #333;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: var(--success);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            left: 28px;
+        }
+
+        .dev-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+        }
+
+        .dev-link {
+            padding: 12px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .dev-link:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            border: 1px solid var(--primary);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!-- Login/Register Container -->
+    <div id="auth-container" class="container">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+
+        <div style="position: relative; padding: 3px; background: linear-gradient(90deg, #ff0000, #00ff00, #00ffff, #ff00ff, #ff0000); background-size: 200% 200%; animation: rgbMove 3s linear infinite; border-radius: 15px; margin-bottom: 20px;">
+            <div style="background: #050505; padding: 20px; border-radius: 12px;">
+                <h1>SILA MD</h1>
+                <div class="status-line">👑 SYSTEM ACTIVE 👑</div>
+            </div>
+        </div>
+
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('login')">LOGIN</button>
+            <button class="tab-btn" onclick="switchTab('register')">REGISTER</button>
+        </div>
+
+        <!-- Login Tab -->
+        <div id="login-tab" class="tab-content active">
+            <div class="input-group">
+                <input type="text" id="login-username" placeholder="USERNAME" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <input type="password" id="login-password" placeholder="PASSWORD" autocomplete="off">
+            </div>
+            <button onclick="login()">🔓 LOGIN</button>
+            <div id="login-message"></div>
+        </div>
+
+        <!-- Register Tab -->
+        <div id="register-tab" class="tab-content">
+            <div class="input-group">
+                <input type="text" id="reg-username" placeholder="USERNAME" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <input type="password" id="reg-password" placeholder="PASSWORD" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <input type="text" id="reg-fullname" placeholder="FULL NAME (Optional)" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <input type="email" id="reg-email" placeholder="EMAIL (Optional)" autocomplete="off">
+            </div>
+            <button onclick="register()">📝 REGISTER</button>
+            <div id="register-message"></div>
+        </div>
+
+        <footer>👑 SILA MD WHATSAPP BOT 👑</footer>
+    </div>
+
+    <!-- Dashboard Container (Hidden by default) -->
+    <div id="dashboard-container" class="container container-large" style="display: none;">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="user-info">
+                <span id="user-name"></span>
+            </div>
+            <div class="menu-container">
+                <div class="menu-dots" onclick="toggleMenu()">⋮</div>
+                <div class="menu-dropdown" id="menu-dropdown">
+                    <div class="menu-item" onclick="logout()">🚪 LOGOUT</div>
+                    <div class="menu-item" onclick="showDevelopers()">👨‍💻 DEVELOPERS</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pairing Section -->
+        <div style="position: relative; padding: 3px; background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffff); background-size: 200%; animation: rgbMove 2s linear infinite; border-radius: 10px; margin-bottom: 20px;">
+            <div style="background: #000; padding: 20px; border-radius: 8px;">
+                <h2 style="font-size: 1.2rem;">🔗 PAIR NEW BOT</h2>
+                <div class="input-group">
+                    <input type="text" id="pair-number" placeholder="+255XXXXXXXXX" autocomplete="off">
+                </div>
+                <button onclick="pairBot()">♥️ PAIR BOT ♥️</button>
+                <div id="pair-result"></div>
+            </div>
+        </div>
+
+        <!-- Bots List -->
+        <h2 style="font-size: 1.2rem;">🤖 YOUR BOTS</h2>
+        <div id="bots-list" class="bots-grid">
+            <!-- Bots will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Developers Modal -->
+    <div id="developers-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">👨‍💻 DEVELOPERS</h2>
+            <div class="dev-links">
+                <a href="https://wa.me/255768026718" target="_blank" class="dev-link">📱 CONTACT XIDS</a>
+                <a href="https://wa.me/255789661031" target="_blank" class="dev-link">🤖 CONTACT SILA</a>
+                <a href="https://whatsapp.com/channel/0029Vb7PKs490x347h5qTM1q" target="_blank" class="dev-link">📢 FOLLOW CHANNEL</a>
+                <a href="https://chat.whatsapp.com/FX7AtNdP84pJ0IBnv4CM3B" target="_blank" class="dev-link">👥 JOIN GROUP</a>
+                <a href="https://t.me/sila_tech2" target="_blank" class="dev-link">✈️ TELEGRAM</a>
+                <a href="https://github.com/Sila-Md/SILA-MD" target="_blank" class="dev-link">💻 GITHUB</a>
+            </div>
+            <button onclick="closeModal()" style="margin-top: 20px;">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- Bot Config Modal -->
+    <div id="config-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">⚙️ BOT CONFIGURATION</h2>
+            <div id="config-content"></div>
+            <button onclick="closeConfigModal()" style="margin-top: 20px;">CLOSE</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentUser = null;
+    let botsData = [];
+
+    // Check if already logged in
+    checkAuth();
+
+    async function checkAuth() {
+        try {
+            const res = await fetch('/api/user/data');
+            if (res.ok) {
+                const data = await res.json();
+                currentUser = data.user;
+                botsData = data.numbers;
+                showDashboard();
+            }
+        } catch (e) {
+            console.log('Not logged in');
+        }
+    }
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        if (tab === 'login') {
+            document.querySelector('.tab-btn').classList.add('active');
+            document.getElementById('login-tab').classList.add('active');
+        } else {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('register-tab').classList.add('active');
+        }
+    }
+
+    async function register() {
+        const username = document.getElementById('reg-username').value;
+        const password = document.getElementById('reg-password').value;
+        const fullName = document.getElementById('reg-fullname').value;
+        const email = document.getElementById('reg-email').value;
+        const msgDiv = document.getElementById('register-message');
+
+        if (!username || !password) {
+            msgDiv.innerHTML = '<div class="error-message">Username and password required</div>';
+            return;
+        }
+
+        msgDiv.innerHTML = '<div class="loader"></div>';
+
+        try {
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password, email, full_name: fullName })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                msgDiv.innerHTML = '<div class="success-message">Registration successful! Please login.</div>';
+                switchTab('login');
+            } else {
+                msgDiv.innerHTML = `<div class="error-message">${data.error}</div>`;
+            }
+        } catch (e) {
+            msgDiv.innerHTML = '<div class="error-message">Registration failed</div>';
+        }
+    }
+
+    async function login() {
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        const msgDiv = document.getElementById('login-message');
+
+        if (!username || !password) {
+            msgDiv.innerHTML = '<div class="error-message">Username and password required</div>';
+            return;
+        }
+
+        msgDiv.innerHTML = '<div class="loader"></div>';
+
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                currentUser = data.user;
+                await loadDashboard();
+                showDashboard();
+            } else {
+                msgDiv.innerHTML = `<div class="error-message">${data.error}</div>`;
+            }
+        } catch (e) {
+            msgDiv.innerHTML = '<div class="error-message">Login failed</div>';
+        }
+    }
+
+    async function logout() {
+        await fetch('/api/logout', { method: 'POST' });
+        currentUser = null;
+        botsData = [];
+        document.getElementById('auth-container').style.display = 'block';
+        document.getElementById('dashboard-container').style.display = 'none';
+        document.getElementById('menu-dropdown').classList.remove('show');
+    }
+
+    async function loadDashboard() {
+        try {
+            const res = await fetch('/api/user/data');
+            if (res.ok) {
+                const data = await res.json();
+                currentUser = data.user;
+                botsData = data.numbers;
+                renderBots();
+                document.getElementById('user-name').innerHTML = `👑 ${currentUser.username || currentUser.full_name || 'User'}`;
+            }
+        } catch (e) {
+            console.error('Failed to load dashboard:', e);
+        }
+    }
+
+    function showDashboard() {
+        document.getElementById('auth-container').style.display = 'none';
+        document.getElementById('dashboard-container').style.display = 'block';
+        loadDashboard();
+    }
+
+    function renderBots() {
+        const container = document.getElementById('bots-list');
+        
+        if (botsData.length === 0) {
+            container.innerHTML = '<div style="text-align: center; padding: 20px; color: #aaa;">No bots connected yet. Pair a bot above.</div>';
+            return;
+        }
+
+        container.innerHTML = botsData.map(bot => `
+            <div class="bot-card ${bot.connectionStatus === 'connected' ? 'connected' : ''}">
+                <div class="bot-number">${bot.number}</div>
+                <div class="bot-status ${bot.connectionStatus === 'connected' ? 'status-connected' : 'status-disconnected'}">
+                    ${bot.connectionStatus === 'connected' ? '● CONNECTED' : '○ DISCONNECTED'}
+                    ${bot.connectionStatus === 'connected' ? `<br>Uptime: ${bot.uptime}s` : ''}
+                </div>
+                <div class="bot-actions">
+                    <button class="success" onclick="showBotConfig('${bot.number}')" style="flex:1">⚙️ CONFIG</button>
+                    <button class="danger" onclick="disconnectBot('${bot.number}')" style="flex:1">🗑️ REMOVE</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function pairBot() {
+        const number = document.getElementById('pair-number').value.replace(/[^0-9]/g, '');
+        const resultDiv = document.getElementById('pair-result');
+
+        if (!number) {
+            resultDiv.innerHTML = '<div class="error-message">Number required</div>';
+            return;
+        }
+
+        resultDiv.innerHTML = '<div class="loader"></div>';
+
+        try {
+            const res = await fetch(`/code?number=${number}`);
+            const data = await res.json();
+
+            if (data.code) {
+                resultDiv.innerHTML = `
+                    <div style="font-size:0.8rem; color:#aaa">PAIRING CODE:</div>
+                    <div class="code-display" onclick="copyCode('${data.code}')">${data.code}</div>
+                `;
+            } else if (data.status === 'already_connected') {
+                resultDiv.innerHTML = '<div class="error-message">Bot already connected</div>';
+            } else {
+                resultDiv.innerHTML = '<div class="error-message">Connection failed</div>';
+            }
+        } catch (e) {
+            resultDiv.innerHTML = '<div class="error-message">Server error</div>';
+        }
+    }
+
+    async function showBotConfig(number) {
+        try {
+            const res = await fetch(`/api/bot/${number}/config`);
+            if (!res.ok) throw new Error('Failed to load config');
+            
+            const config = await res.json();
+            
+            let html = `<h3>Bot: ${number}</h3>`;
+            
+            const features = [
+                { key: 'AUTO_RECORDING', label: 'Auto Recording' },
+                { key: 'AUTO_TYPING', label: 'Auto Typing' },
+                { key: 'ANTI_CALL', label: 'Anti Call' },
+                { key: 'READ_MESSAGE', label: 'Read Messages' },
+                { key: 'AUTO_VIEW_STATUS', label: 'Auto View Status' },
+                { key: 'AUTO_LIKE_STATUS', label: 'Auto Like Status' },
+                { key: 'AUTO_STATUS_REPLY', label: 'Auto Status Reply' }
+            ];
+            
+            features.forEach(feature => {
+                const value = config[feature.key] === 'true';
+                html += `
+                    <div class="feature-item">
+                        <span>${feature.label}</span>
+                        <div class="toggle-switch ${value ? 'active' : ''}" onclick="toggleFeature('${number}', '${feature.key}', ${!value})">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('config-content').innerHTML = html;
+            document.getElementById('config-modal').classList.add('show');
+        } catch (e) {
+            alert('Failed to load config');
+        }
+    }
+
+    async function toggleFeature(number, feature, newValue) {
+        try {
+            const res = await fetch(`/api/bot/${number}/config`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ [feature]: newValue.toString() })
+            });
+            
+            if (res.ok) {
+                // Refresh config display
+                showBotConfig(number);
+            }
+        } catch (e) {
+            alert('Failed to update config');
+        }
+    }
+
+    async function disconnectBot(number) {
+        if (!confirm(`Remove bot ${number}?`)) return;
+        
+        try {
+            const res = await fetch(`/api/bot/${number}/disconnect`, { method: 'POST' });
+            if (res.ok) {
+                await loadDashboard();
+            } else {
+                alert('Failed to disconnect');
+            }
+        } catch (e) {
+            alert('Failed to disconnect');
+        }
+    }
+
+    function copyCode(code) {
+        navigator.clipboard.writeText(code);
+        const display = document.querySelector('.code-display');
+        if (display) {
+            const originalText = display.innerText;
+            display.innerText = "COPIED!";
+            display.style.borderColor = "#0f0";
+            display.style.color = "#0f0";
+            
+            setTimeout(() => {
+                display.innerText = originalText;
+                display.style.borderColor = "var(--secondary)";
+                display.style.color = "var(--secondary)";
+            }, 1500);
+        }
+    }
+
+    function toggleMenu() {
+        document.getElementById('menu-dropdown').classList.toggle('show');
+    }
+
+    function showDevelopers() {
+        document.getElementById('menu-dropdown').classList.remove('show');
+        document.getElementById('developers-modal').classList.add('show');
+    }
+
+    function closeModal() {
+        document.getElementById('developers-modal').classList.remove('show');
+    }
+
+    function closeConfigModal() {
+        document.getElementById('config-modal').classList.remove('show');
+    }
+
+    // Close menu when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.menu-dots') && !event.target.matches('.menu-dots *')) {
+            document.getElementById('menu-dropdown').classList.remove('show');
+        }
+    }
+</script>
+
+<style>
+    @keyframes rgbMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+</style>
+
+</body>
+</html>
