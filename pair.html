@@ -131,6 +131,11 @@
             color: #000;
         }
 
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .message {
             margin-top: 15px;
             padding: 10px;
@@ -187,10 +192,10 @@
         <!-- LOGIN TAB -->
         <div id="login-tab" class="tab-content active">
             <div class="input-group">
-                <input type="text" id="login-username" placeholder="Username" autocomplete="off" autocapitalize="none">
+                <input type="text" id="login-username" placeholder="Username" autocomplete="off" autocapitalize="none" spellcheck="false">
             </div>
             <div class="input-group">
-                <input type="password" id="login-password" placeholder="Password" autocomplete="off">
+                <input type="password" id="login-password" placeholder="Password" autocomplete="off" spellcheck="false">
             </div>
             <button onclick="login()" id="login-btn">🔓 LOGIN</button>
             <div id="login-message" class="message"></div>
@@ -199,16 +204,16 @@
         <!-- REGISTER TAB -->
         <div id="register-tab" class="tab-content">
             <div class="input-group">
-                <input type="text" id="reg-username" placeholder="Username" autocomplete="off" autocapitalize="none">
+                <input type="text" id="reg-username" placeholder="Username" autocomplete="off" autocapitalize="none" spellcheck="false">
             </div>
             <div class="input-group">
-                <input type="password" id="reg-password" placeholder="Password" autocomplete="off">
+                <input type="password" id="reg-password" placeholder="Password" autocomplete="off" spellcheck="false">
             </div>
             <div class="input-group">
-                <input type="text" id="reg-fullname" placeholder="Full Name (Optional)" autocomplete="off">
+                <input type="text" id="reg-fullname" placeholder="Full Name (Optional)" autocomplete="off" spellcheck="false">
             </div>
             <div class="input-group">
-                <input type="email" id="reg-email" placeholder="Email (Optional)" autocomplete="off">
+                <input type="email" id="reg-email" placeholder="Email (Optional)" autocomplete="off" spellcheck="false">
             </div>
             <button onclick="register()" id="register-btn">📝 REGISTER</button>
             <div id="register-message" class="message"></div>
@@ -219,25 +224,55 @@
 
     <script>
         // ============================================
+        // PREVENT PAGE RELOAD ON FORM SUBMIT
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prevent any form submission that might cause reload
+            document.querySelectorAll('form').forEach(form => {
+                if (form) form.addEventListener('submit', (e) => e.preventDefault());
+            });
+            
+            // Prevent Enter key from submitting forms
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        // Trigger appropriate action based on active tab
+                        if (document.getElementById('login-tab').classList.contains('active')) {
+                            login();
+                        } else {
+                            register();
+                        }
+                    }
+                });
+            });
+
+            // Check if already logged in
+            checkAuth();
+        });
+
+        // ============================================
         // GLOBAL VARIABLES
         // ============================================
         let isProcessing = false;
 
         // ============================================
-        // CHECK SESSION ON LOAD
+        // CHECK AUTH STATUS
         // ============================================
-        window.addEventListener('load', async () => {
+        async function checkAuth() {
             try {
                 const res = await fetch('/api/user/data', {
-                    credentials: 'same-origin'
+                    credentials: 'same-origin',
+                    cache: 'no-cache'
                 });
+                
                 if (res.ok) {
                     window.location.href = '/';
                 }
             } catch (e) {
                 console.log('Not logged in');
             }
-        });
+        }
 
         // ============================================
         // SWITCH TABS
@@ -254,11 +289,15 @@
                 document.getElementById('login-tab').classList.add('active');
                 // Clear messages
                 document.getElementById('login-message').innerHTML = '';
+                // Clear register messages
+                document.getElementById('register-message').innerHTML = '';
             } else {
                 document.getElementById('register-tab-btn').classList.add('active');
                 document.getElementById('register-tab').classList.add('active');
                 // Clear messages
                 document.getElementById('register-message').innerHTML = '';
+                // Clear login messages
+                document.getElementById('login-message').innerHTML = '';
             }
         }
 
@@ -296,7 +335,6 @@
             // Show loading
             isProcessing = true;
             btn.disabled = true;
-            btn.style.opacity = '0.7';
             msgDiv.innerHTML = '<div class="loader"></div>';
 
             try {
@@ -329,7 +367,6 @@
                     // Switch to login tab after 2 seconds
                     setTimeout(() => {
                         switchTab('login');
-                        msgDiv.innerHTML = '';
                     }, 2000);
                     
                 } else {
@@ -342,7 +379,6 @@
                 // Reset loading
                 isProcessing = false;
                 btn.disabled = false;
-                btn.style.opacity = '1';
             }
         }
 
@@ -368,7 +404,6 @@
             // Show loading
             isProcessing = true;
             btn.disabled = true;
-            btn.style.opacity = '0.7';
             msgDiv.innerHTML = '<div class="loader"></div>';
 
             try {
@@ -402,20 +437,17 @@
                 // Reset loading
                 isProcessing = false;
                 btn.disabled = false;
-                btn.style.opacity = '1';
             }
         }
 
         // ============================================
-        // ENTER KEY SUPPORT
+        // PREVENT PAGE RELOAD ON ENTER
         // ============================================
-        document.getElementById('login-password').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') login();
-        });
-
-        document.getElementById('reg-password').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') register();
-        });
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        }, false);
     </script>
 </body>
 </html>
