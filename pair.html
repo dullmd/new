@@ -5,114 +5,172 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>👑 SILA MD - Login 👑</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --primary: #00f3ff;
             --secondary: #bc13fe;
             --bg: #050505;
+            --success: #00ff88;
+            --danger: #ff3366;
         }
+
         body {
             background: var(--bg);
             color: #fff;
-            font-family: 'Arial', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
         }
+
         .container {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             border: 1px solid var(--primary);
-            padding: 30px;
+            padding: 25px 20px;
             width: 100%;
-            max-width: 400px;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            max-width: 380px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
         }
+
         h1 {
             color: var(--primary);
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
             text-shadow: 0 0 10px var(--primary);
         }
+
         .tab-buttons {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 25px;
+            background: #111;
+            padding: 5px;
+            border-radius: 8px;
         }
+
         .tab-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px 8px;
             background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
+            border: none;
+            color: #888;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            transition: all 0.2s;
         }
+
         .tab-btn.active {
             background: var(--primary);
             color: #000;
         }
+
         .tab-content {
             display: none;
         }
+
         .tab-content.active {
             display: block;
         }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
         input {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+            padding: 14px 12px;
             background: #111;
             border: 1px solid #333;
-            border-bottom: 2px solid var(--primary);
-            color: var(--primary);
-            box-sizing: border-box;
+            border-radius: 8px;
+            color: #fff;
             font-size: 1rem;
+            transition: all 0.2s;
+            outline: none;
         }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 243, 255, 0.1);
+        }
+
+        input::placeholder {
+            color: #444;
+            font-size: 0.9rem;
+        }
+
         button {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+            padding: 14px;
             background: transparent;
             border: 1px solid var(--primary);
             color: var(--primary);
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
+            border-radius: 8px;
+            transition: all 0.2s;
+            margin-top: 5px;
         }
+
         button:hover {
             background: var(--primary);
             color: #000;
-            box-shadow: 0 0 20px var(--primary);
         }
+
         .message {
-            margin-top: 10px;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
             text-align: center;
             font-size: 0.9rem;
+            min-height: 40px;
         }
-        .error { color: #ff3366; }
-        .success { color: #00ff88; }
+
+        .error { 
+            color: var(--danger);
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid var(--danger);
+        }
+
+        .success { 
+            color: var(--success);
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--success);
+        }
+
         .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
             border: 2px solid #333;
             border-top: 2px solid var(--primary);
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
+            animation: spin 0.8s linear infinite;
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
         footer {
             text-align: center;
-            margin-top: 30px;
-            color: #666;
+            margin-top: 25px;
+            color: #444;
             font-size: 0.8rem;
         }
     </style>
@@ -122,23 +180,37 @@
         <h1>👑 SILA MD</h1>
         
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchTab('login')">LOGIN</button>
-            <button class="tab-btn" onclick="switchTab('register')">REGISTER</button>
+            <button class="tab-btn active" onclick="switchTab('login')" id="login-tab-btn">LOGIN</button>
+            <button class="tab-btn" onclick="switchTab('register')" id="register-tab-btn">REGISTER</button>
         </div>
 
+        <!-- LOGIN TAB -->
         <div id="login-tab" class="tab-content active">
-            <input type="text" id="login-username" placeholder="Username">
-            <input type="password" id="login-password" placeholder="Password">
-            <button onclick="login()">LOGIN</button>
+            <div class="input-group">
+                <input type="text" id="login-username" placeholder="Username" autocomplete="off" autocapitalize="none">
+            </div>
+            <div class="input-group">
+                <input type="password" id="login-password" placeholder="Password" autocomplete="off">
+            </div>
+            <button onclick="login()" id="login-btn">🔓 LOGIN</button>
             <div id="login-message" class="message"></div>
         </div>
 
+        <!-- REGISTER TAB -->
         <div id="register-tab" class="tab-content">
-            <input type="text" id="reg-username" placeholder="Username">
-            <input type="password" id="reg-password" placeholder="Password">
-            <input type="text" id="reg-fullname" placeholder="Full Name (Optional)">
-            <input type="email" id="reg-email" placeholder="Email (Optional)">
-            <button onclick="register()">REGISTER</button>
+            <div class="input-group">
+                <input type="text" id="reg-username" placeholder="Username" autocomplete="off" autocapitalize="none">
+            </div>
+            <div class="input-group">
+                <input type="password" id="reg-password" placeholder="Password" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <input type="text" id="reg-fullname" placeholder="Full Name (Optional)" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <input type="email" id="reg-email" placeholder="Email (Optional)" autocomplete="off">
+            </div>
+            <button onclick="register()" id="register-btn">📝 REGISTER</button>
             <div id="register-message" class="message"></div>
         </div>
 
@@ -146,85 +218,203 @@
     </div>
 
     <script>
+        // ============================================
+        // GLOBAL VARIABLES
+        // ============================================
+        let isProcessing = false;
+
+        // ============================================
+        // CHECK SESSION ON LOAD
+        // ============================================
+        window.addEventListener('load', async () => {
+            try {
+                const res = await fetch('/api/user/data', {
+                    credentials: 'same-origin'
+                });
+                if (res.ok) {
+                    window.location.href = '/';
+                }
+            } catch (e) {
+                console.log('Not logged in');
+            }
+        });
+
+        // ============================================
+        // SWITCH TABS
+        // ============================================
         function switchTab(tab) {
+            // Update buttons
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Update content
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
             if (tab === 'login') {
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('login-tab-btn').classList.add('active');
                 document.getElementById('login-tab').classList.add('active');
+                // Clear messages
+                document.getElementById('login-message').innerHTML = '';
             } else {
-                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('register-tab-btn').classList.add('active');
                 document.getElementById('register-tab').classList.add('active');
+                // Clear messages
+                document.getElementById('register-message').innerHTML = '';
             }
         }
 
+        // ============================================
+        // REGISTER FUNCTION
+        // ============================================
         async function register() {
-            const username = document.getElementById('reg-username').value;
-            const password = document.getElementById('reg-password').value;
-            const fullName = document.getElementById('reg-fullname').value;
-            const email = document.getElementById('reg-email').value;
+            // Prevent double submission
+            if (isProcessing) return;
+            
+            // Get values
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+            const fullName = document.getElementById('reg-fullname').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
             const msgDiv = document.getElementById('register-message');
+            const btn = document.getElementById('register-btn');
 
+            // Validate
             if (!username || !password) {
-                msgDiv.innerHTML = '<span class="error">Username and password required</span>';
+                msgDiv.innerHTML = '<span class="error">❌ Username and password required</span>';
                 return;
             }
 
+            if (username.length < 3) {
+                msgDiv.innerHTML = '<span class="error">❌ Username must be at least 3 characters</span>';
+                return;
+            }
+
+            if (password.length < 4) {
+                msgDiv.innerHTML = '<span class="error">❌ Password must be at least 4 characters</span>';
+                return;
+            }
+
+            // Show loading
+            isProcessing = true;
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
             msgDiv.innerHTML = '<div class="loader"></div>';
 
             try {
                 const res = await fetch('/api/register', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password, email, full_name: fullName })
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        username, 
+                        password, 
+                        email: email || null, 
+                        full_name: fullName || null 
+                    }),
+                    credentials: 'same-origin'
                 });
+
                 const data = await res.json();
 
                 if (data.success) {
-                    msgDiv.innerHTML = '<span class="success">Registration successful! Please login.</span>';
-                    switchTab('login');
+                    msgDiv.innerHTML = '<span class="success">✅ Registration successful! Please login.</span>';
+                    
+                    // Clear form
+                    document.getElementById('reg-username').value = '';
+                    document.getElementById('reg-password').value = '';
+                    document.getElementById('reg-fullname').value = '';
+                    document.getElementById('reg-email').value = '';
+                    
+                    // Switch to login tab after 2 seconds
+                    setTimeout(() => {
+                        switchTab('login');
+                        msgDiv.innerHTML = '';
+                    }, 2000);
+                    
                 } else {
-                    msgDiv.innerHTML = `<span class="error">${data.error}</span>`;
+                    msgDiv.innerHTML = `<span class="error">❌ ${data.error || 'Registration failed'}</span>`;
                 }
             } catch (e) {
-                msgDiv.innerHTML = '<span class="error">Registration failed</span>';
+                console.error('Register error:', e);
+                msgDiv.innerHTML = '<span class="error">❌ Network error. Please try again.</span>';
+            } finally {
+                // Reset loading
+                isProcessing = false;
+                btn.disabled = false;
+                btn.style.opacity = '1';
             }
         }
 
+        // ============================================
+        // LOGIN FUNCTION
+        // ============================================
         async function login() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
+            // Prevent double submission
+            if (isProcessing) return;
+            
+            // Get values
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
             const msgDiv = document.getElementById('login-message');
+            const btn = document.getElementById('login-btn');
 
+            // Validate
             if (!username || !password) {
-                msgDiv.innerHTML = '<span class="error">Username and password required</span>';
+                msgDiv.innerHTML = '<span class="error">❌ Username and password required</span>';
                 return;
             }
 
+            // Show loading
+            isProcessing = true;
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
             msgDiv.innerHTML = '<div class="loader"></div>';
 
             try {
                 const res = await fetch('/api/login', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password }),
+                    credentials: 'same-origin'
                 });
+
                 const data = await res.json();
 
                 if (data.success) {
-                    window.location.href = '/';
+                    msgDiv.innerHTML = '<span class="success">✅ Login successful! Redirecting...</span>';
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                    
                 } else {
-                    msgDiv.innerHTML = `<span class="error">${data.error}</span>`;
+                    msgDiv.innerHTML = `<span class="error">❌ ${data.error || 'Invalid username or password'}</span>`;
                 }
             } catch (e) {
-                msgDiv.innerHTML = '<span class="error">Login failed</span>';
+                console.error('Login error:', e);
+                msgDiv.innerHTML = '<span class="error">❌ Network error. Please try again.</span>';
+            } finally {
+                // Reset loading
+                isProcessing = false;
+                btn.disabled = false;
+                btn.style.opacity = '1';
             }
         }
 
-        // Check if already logged in
-        fetch('/api/user/data').then(res => {
-            if (res.ok) window.location.href = '/';
+        // ============================================
+        // ENTER KEY SUPPORT
+        // ============================================
+        document.getElementById('login-password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') login();
+        });
+
+        document.getElementById('reg-password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') register();
         });
     </script>
 </body>
